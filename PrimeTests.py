@@ -1,5 +1,6 @@
 from fractions import gcd
 
+from Number import Number
 from TestMapping import TestMapping
 from Utils import *
 
@@ -7,20 +8,20 @@ from Utils import *
 class PrimeTests:
     @staticmethod
     def run(n, r, test):
-        a = n - 1
+        if n % 2 == 0:
+            return False
+        a = Number(n, n - 1)
         while a > 0 and r > 0:
-            if not PrimeTests.condition_of_test(test, n, a):
+            if not (gcd(a, n) == 1 and PrimeTests.condition_of_test(test, a, n)):
                 return False
             a -= 1
             r -= 1
         return True
 
     @staticmethod
-    def condition_of_test(test, n, a):
-        if n % 2 == 0:
-            return False
+    def condition_of_test(test, a, n):
         if test == TestMapping.Fermat.value:
-            return PrimeTests.Fermat(n, a)
+            return PrimeTests.Fermat(a, n)
         elif test == TestMapping.MillerRabin.value:
             return PrimeTests.Miller_Rabin(n, a)
         elif test == TestMapping.SolovayStrassen.value:
@@ -32,24 +33,24 @@ class PrimeTests:
             return False
 
     @staticmethod
-    def Fermat(n, a):
-        return gcd(a, n) == 1 and is_equals_one_in_power(a, n - 1, n)
+    def Fermat(a, n):
+        return a ** (n - 1) == 1
 
     @staticmethod
     def Miller_Rabin(n, a):
         s = get_max_power_of_two_that_divide_number(n - 1)
-        d = (n - 1) // (2 ** s)
-        return is_equals_one_in_power(a, d, n) or PrimeTests._is_exist_r(a, s, d, n)
+        d = (n - 1) // (1 << s)
+        return a ** d == 1 or PrimeTests._is_exist_r(a, s, d)
 
     @staticmethod
     def Solovay_Strassen(n, a):
-        return not gcd(a, n) > 1 and is_equals_in_power(a, (n - 1) // 2, jacobi(a, n), n)
+        return a ** ((n - 1) // 2) == jacobi(a, n)
 
     @staticmethod
-    def _is_exist_r(a, s, d, n):
+    def _is_exist_r(a, s, d):
         r = 0
         while r < s:
-            if is_equals_minus_one_in_power(a, pow(2, r) * d, n):
+            if a ** ((1 << r) * d) == -1:
                 return True
             r += 1
         return False

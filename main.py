@@ -6,4 +6,4 @@ while True:
     l = int(input('Please input number of bits: \n'))
     r = int(input('And rounds: \n'))
     n = get_number(l)
-    print(n, r, PrimeTests.run(n, r, test), '\n')
+    print(n, PrimeTests.run(n, r, test), '\n')

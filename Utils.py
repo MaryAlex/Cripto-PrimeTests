@@ -1,32 +1,12 @@
 from random import random
 
 
-def is_modulo_equals(number_one, number_two, modulo):
-    return number_one == (number_two if number_two > 0 else modulo + number_two)
-
-
-def is_equals_one(number, modulo):
-    return is_modulo_equals(number, 1, modulo)
-
-
-def is_equals_one_in_power(number, power_number, modulo):
-    return is_equals_one(pow(number, power_number, modulo), modulo)
-
-
-def is_equals_minus_one_in_power(number, power_number, modulo):
-    return is_equals_in_power(number, power_number, modulo - 1, modulo)
-
-
-def is_equals_in_power(number_one, power_number, number_two, modulo):
-    return is_modulo_equals(pow(number_one, power_number, modulo), number_two, modulo)
-
-
 def get_max_power_of_two_that_divide_number(number):
     tmp = number
     s = 0
-    while tmp % 2 == 0:
+    while tmp & 1 == 0:
         s += 1
-        tmp //= 2
+        tmp >>= 1
     return s
 
 
@@ -53,9 +33,9 @@ def jacobi(a, n):
     return
 
 
-def get_number(l):
+def get_number(number_of_bits):
     number = '1'
-    for i in range(1, l-1):
+    for i in range(1, number_of_bits - 1):
         number += str(round(random()))
     number += '1'
     return int(number, 2)
